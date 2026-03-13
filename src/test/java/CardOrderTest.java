@@ -39,22 +39,42 @@ public class CardOrderTest {
     }
 
     @Test
+    void shouldInValidateFormWhenNameFieldsIsEmpty() {
+        WebElement form = driver.findElement(By.className("form"));
+        form.findElement(By.cssSelector("[data-test-id=phone] input")).sendKeys("+79334557373");
+        form.findElement(By.cssSelector("[data-test-id=agreement]")).click();
+        form.findElement(By.className("button")).click();
+        String text = form.findElement(By.cssSelector("[data-test-id=name].input_invalid .input__sub")).getText();
+        assertEquals("Поле обязательно для заполнения", text.trim());
+    }
+
+    @Test
+    void shouldInValidateFormWhenPhoneFieldsIsEmpty() {
+        WebElement form = driver.findElement(By.className("form"));
+        form.findElement(By.cssSelector("[data-test-id=name] input")).sendKeys("Александр");
+        form.findElement(By.cssSelector("[data-test-id=agreement]")).click();
+        form.findElement(By.className("button")).click();
+        String text = form.findElement(By.cssSelector("[data-test-id=phone].input_invalid .input__sub")).getText();
+        assertEquals("Поле обязательно для заполнения", text.trim());
+    }
+
+    @Test
     void shouldValidateForm() {
         WebElement form = driver.findElement(By.className("form"));
-        form.findElement(By.cssSelector("[data-test-id='name'] input")).sendKeys("Александр");
-        form.findElement(By.cssSelector("[data-test-id='phone'] input")).sendKeys("+79334557373");
-        form.findElement(By.cssSelector("[data-test-id='agreement']")).click();
+        form.findElement(By.cssSelector("[data-test-id=name] input")).sendKeys("Александр");
+        form.findElement(By.cssSelector("[data-test-id=phone] input")).sendKeys("+79334557373");
+        form.findElement(By.cssSelector("[data-test-id=agreement]")).click();
         form.findElement(By.className("button")).click();
-        String text = driver.findElement(By.cssSelector("[data-test-id='order-success']")).getText();
+        String text = driver.findElement(By.cssSelector("[data-test-id=order-success]")).getText();
         assertEquals("Ваша заявка успешно отправлена! Наш менеджер свяжется с вами в ближайшее время.", text.trim());
     }
 
     @Test
     void shouldInvalidateNameField() {
         WebElement form = driver.findElement(By.className("form"));
-        form.findElement(By.cssSelector("[data-test-id='name'] input")).sendKeys("Alexander");
-        form.findElement(By.cssSelector("[data-test-id='phone'] input")).sendKeys("+79334557373");
-        form.findElement(By.cssSelector("[data-test-id='agreement']")).click();
+        form.findElement(By.cssSelector("[data-test-id=name] input")).sendKeys("Alexander");
+        form.findElement(By.cssSelector("[data-test-id=phone] input")).sendKeys("+79334557373");
+        form.findElement(By.cssSelector("[data-test-id=agreement]")).click();
         form.findElement(By.className("button")).click();
         String text = form.findElement(By.cssSelector("[data-test-id=name].input_invalid .input__sub")).getText();
         assertEquals("Имя и Фамилия указаные неверно. Допустимы только русские буквы, пробелы и дефисы.", text.trim());
@@ -63,9 +83,9 @@ public class CardOrderTest {
     @Test
     void shouldInvalidatePhoneField() {
         WebElement form = driver.findElement(By.className("form"));
-        form.findElement(By.cssSelector("[data-test-id='name'] input")).sendKeys("Александр");
-        form.findElement(By.cssSelector("[data-test-id='phone'] input")).sendKeys("79334557373");
-        form.findElement(By.cssSelector("[data-test-id='agreement']")).click();
+        form.findElement(By.cssSelector("[data-test-id=name] input")).sendKeys("Александр");
+        form.findElement(By.cssSelector("[data-test-id=phone] input")).sendKeys("79334557373");
+        form.findElement(By.cssSelector("[data-test-id=agreement]")).click();
         form.findElement(By.className("button")).click();
         String text = form.findElement(By.cssSelector("[data-test-id=phone].input_invalid .input__sub")).getText();
         assertTrue(text.contains("Телефон указан неверно."));
@@ -74,12 +94,11 @@ public class CardOrderTest {
     @Test
     void shouldInvalidCheckbox () {
         WebElement form = driver.findElement(By.className("form"));
-        form.findElement(By.cssSelector("[data-test-id='name'] input")).sendKeys("Александр");
-        form.findElement(By.cssSelector("[data-test-id='phone'] input")).sendKeys("+79334557373");
+        form.findElement(By.cssSelector("[data-test-id=name] input")).sendKeys("Александр");
+        form.findElement(By.cssSelector("[data-test-id=phone] input")).sendKeys("+79334557373");
         form.findElement(By.className("button")).click();
-        WebElement checkBox = form.findElement(By.cssSelector("[data-test-id=agreement]"));
-        boolean isChecked = checkBox.getAttribute("class").contains("checkbox_checked");
-        assertFalse(isChecked);
+        WebElement invalidAgreement = form.findElement(By.cssSelector("[data-test-id=agreement].input_invalid"));
+        assertTrue(invalidAgreement.isDisplayed());
     }
 
 }
